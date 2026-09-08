@@ -2,11 +2,21 @@
 
 [Visit the live store](https://marvel.sabados.ai/agent-content/) or
 [read its JSON catalog](https://marvel.sabados.ai/agent-content/api/v1/catalog).
-Booking Demo v1 offers 58 fictional records in JSON, CSV and SQLite, with three
-checked SQL journeys, for **0.00010 native ETH** plus network fees. The eight-row
-CC0 preview and full buyer licence are available before checkout. The paid archive
-is stored privately; this repository contains the MIT-licensed store source and
-public sample metadata in `example-catalog.json`.
+Two original fixture packs are available for **0.00010 native ETH each**, plus
+Ethereum-mainnet network fees:
+
+| Pack | Contents | Free CC0 preview |
+| --- | --- | --- |
+| Booking Demo v1 | 58 fictional records in JSON, CSV and SQLite, with three checked SQL journeys | Eight related rows |
+| Calendar Cases v1 | 20 Australia/Sydney scheduling cases in JSON and CSV, covering DST gaps/folds, leap days, month-end policies and weekly wall-time recurrence | Three cases with expected results |
+
+Calendar Cases includes a Python 3.9+ reference evaluator and 15 passing checks;
+running it requires existing IANA timezone data. Its valid-instant examples cover
+2024–2026, and each result follows an explicitly declared application policy.
+Booking Demo includes its generator and 14 passing checks. Full buyer licences
+are available before checkout. The paid archives are stored privately; this
+repository contains the MIT-licensed store source and public sample metadata in
+`example-catalog.json`.
 
 An API-first digital-content store using Python's standard library. It serves
 public product previews and delivers private files after a native Ethereum-mainnet

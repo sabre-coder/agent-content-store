@@ -141,6 +141,122 @@
         },
         "buyer_licence_text": "Booking Demo v1 — Buyer Licence\nCopyright 2026 sabre-coder contributors.\n\nOn purchase, the buyer receives a non-exclusive, worldwide, perpetual licence\nto use, copy and modify this package, including its fictional data, source,\nexamples and documentation, for commercial or non-commercial demonstrations,\nprototypes, training exercises, automated tests and internal development.\nThe buyer may include original or modified data and assets in applications,\nclient demonstrations, screenshots and test fixtures, and may share the\npackage with collaborators and clients working on those projects.\n\nDo not resell or publicly redistribute the original or modified package as a\nstandalone dataset, template or competing download. This restriction does not\nprevent distributing applications, demonstrations or test suites that use it.\nThe buyer does not receive exclusive rights. Attribution is appreciated but\nnot required. Keep this licence with copies of the complete package shared\nwith collaborators or clients.\n\nAll identities, bookings and payments are fictional. The package is supplied\nas-is, without warranty. It is a demo and test resource, not a production\nbooking system or payment integration. The seller makes no promise that use\nof this package satisfies any particular legal, regulatory or platform policy.\n\nNothing in this licence excludes any rights or remedies that cannot lawfully\nbe excluded.\n\nThe eight rows and sample journey separately identified in the free public\npreview are dedicated to the public domain under CC0 1.0. Their free licence\nis preserved; this buyer licence applies to the remaining package.\n"
       }
+    },
+    {
+      "id": "calendar-cases-v1",
+      "title": "Calendar Cases v1",
+      "description": "20 original Australia/Sydney scheduling cases in JSON and CSV, covering DST gaps/folds, leap days, month-end policy and weekly wall-time recurrence, with checked UTC expectations.",
+      "price_wei": 100000000000000,
+      "asset_filename": "calendar-cases-v1.zip",
+      "asset_sha256": "5b93009849020435e3ab0b0c922d9d66405a23ca7c9ff0fbfadeebe56f4c407f",
+      "preview": {
+        "case_count": 20,
+        "preview_case_count": 3,
+        "zone": "Australia/Sydney",
+        "formats": [
+          "JSON",
+          "CSV"
+        ],
+        "archive_bytes": 86129,
+        "free_preview_licence": "CC0-1.0",
+        "free_preview_licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "free_preview_notice": "These three identified cases are dedicated to the public domain under CC0 1.0. This dedication does not apply to the rest of the paid package.",
+        "policy_summary": {
+          "gap": "Reject missing local times or shift by the full offset jump, preserving minutes.",
+          "fold": "Reject ambiguous local times or choose the earlier/later UTC instant.",
+          "month_end": "Reject an impossible target day or clamp to that month's last day.",
+          "weekly": "Retain the original local wall-time anchor; a one-off gap shift does not move later occurrences."
+        },
+        "bounds": "20 cases: valid instants in 2024-2026, plus invalid Gregorian dates including 2100-02-29; Australia/Sydney only. Explicit application policies, not a complete calendar engine.",
+        "source_links": [
+          "https://data.iana.org/time-zones/tzdb/australasia",
+          "https://docs.python.org/3/library/zoneinfo.html",
+          "https://peps.python.org/pep-0495/",
+          "https://docs.python.org/3/library/calendar.html#calendar.monthrange"
+        ],
+        "cases": [
+          {
+            "id": "gap-start-reject",
+            "title": "Reject the first nonexistent second",
+            "category": "spring_gap",
+            "operation": "resolve_local",
+            "zone": "Australia/Sydney",
+            "input": {
+              "local": "2026-10-04T02:00:00"
+            },
+            "policy": {
+              "gap": "reject",
+              "fold": "reject",
+              "month_end": "reject"
+            },
+            "expected": {
+              "status": "error",
+              "error": "nonexistent_local_time"
+            },
+            "why_it_matters": "Attaching ZoneInfo alone does not validate a local time."
+          },
+          {
+            "id": "fold-later",
+            "title": "Choose the later occurrence of 02:30",
+            "category": "autumn_fold",
+            "operation": "resolve_local",
+            "zone": "Australia/Sydney",
+            "input": {
+              "local": "2026-04-05T02:30:00"
+            },
+            "policy": {
+              "gap": "reject",
+              "fold": "later",
+              "month_end": "reject"
+            },
+            "expected": {
+              "status": "ok",
+              "occurrences": [
+                {
+                  "requested_local": "2026-04-05T02:30:00",
+                  "local": "2026-04-05T02:30:00+10:00",
+                  "utc": "2026-04-04T16:30:00Z",
+                  "offset_seconds": 36000,
+                  "fold": 1
+                }
+              ],
+              "elapsed_utc_seconds": []
+            },
+            "why_it_matters": "The same wall label can represent an instant one hour later."
+          },
+          {
+            "id": "month-clamp-common",
+            "title": "Clamp January 31 to common-year February 28",
+            "category": "month_end",
+            "operation": "add_months",
+            "zone": "Australia/Sydney",
+            "input": {
+              "local": "2025-01-31T09:00:00",
+              "months": 1
+            },
+            "policy": {
+              "gap": "reject",
+              "fold": "reject",
+              "month_end": "clamp"
+            },
+            "expected": {
+              "status": "ok",
+              "occurrences": [
+                {
+                  "requested_local": "2025-02-28T09:00:00",
+                  "local": "2025-02-28T09:00:00+11:00",
+                  "utc": "2025-02-27T22:00:00Z",
+                  "offset_seconds": 39600,
+                  "fold": 0
+                }
+              ],
+              "elapsed_utc_seconds": []
+            },
+            "why_it_matters": "Calendar months are not a fixed number of elapsed days."
+          }
+        ],
+        "buyer_licence_text": "Calendar Cases v1 — Buyer Licence\nCopyright 2026 sabre-coder contributors.\n\nOn purchase, the buyer receives a non-exclusive, worldwide, perpetual licence\nto use, copy and modify this package, including its original data, source,\nexamples and documentation, for commercial or non-commercial demonstrations,\nprototypes, training exercises, automated tests and internal development.\nThe buyer may include original or modified cases in applications, client\ndemonstrations and test suites, and share the package with collaborators and\nclients working on those projects.\n\nDo not resell or publicly redistribute the original or modified package as a\nstandalone fixture set, template or competing download. This restriction does\nnot prevent distributing applications, demonstrations or test suites that use\nit. The buyer does not receive exclusive rights. Attribution is appreciated\nbut not required. Keep this licence with copies of the complete package shared\nwith collaborators or clients.\n\nThe package is supplied as-is, without warranty. Its dated test expectations\nand explicit policies are not a production scheduling service or a promise of\nfuture timezone rules. No particular legal, regulatory or platform-policy\ncompliance is promised. Nothing in this licence excludes any rights or remedies\nthat cannot lawfully be excluded.\n\nThe three cases separately identified in the free public preview are dedicated\nto the public domain under CC0 1.0. Their free licence is preserved; this buyer\nlicence applies to the remaining package.\n"
+      }
     }
   ]
 }
