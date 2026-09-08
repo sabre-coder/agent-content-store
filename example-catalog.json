@@ -1,0 +1,146 @@
+{
+  "products": [
+    {
+      "id": "booking-demo-v1",
+      "title": "Booking Demo v1",
+      "description": "58 fictional event-booking rows across four related tables, in JSON, CSV and SQLite, with three checked SQL journeys covering capacity, refunds and empty states.",
+      "price_wei": 100000000000000,
+      "asset_filename": "booking-demo-v1.zip",
+      "asset_sha256": "ba3b6104a867be7874124e69a99e4bbdc6033991ee82955c7d57165a74b1c6f7",
+      "preview": {
+        "product_id": "booking-demo-v1",
+        "title": "Booking Demo v1",
+        "fictional": true,
+        "description": "58 fictional event-booking rows in JSON, CSV and SQLite, with three checked SQL user journeys.",
+        "schema_summary": {
+          "customers": "customer_id primary key; display_name, example.com email, created_at",
+          "events": "event_id primary key; title, starts_at, venue, capacity, price_cents, USD currency",
+          "bookings": "booking_id primary key; customer_id and event_id foreign keys; seats, status, unit_price_cents, total_cents, created_at, nullable cancelled_at",
+          "payments": "payment_id primary key; booking_id foreign key; kind, status, amount_cents, nullable parent_payment_id self-reference, occurred_at"
+        },
+        "semantics": [
+          "All identities and transactions are fictional; timestamps are UTC ISO 8601.",
+          "Money is integer USD cents, unrelated to the native ETH used to buy the package.",
+          "Only confirmed seats consume capacity; pending reservations do not hold seats.",
+          "Only succeeded charges and refunds affect net received; failed attempts count as zero.",
+          "Refund amounts are positive and reference a successful charge on the same booking.",
+          "Booking and payment totals must be aggregated separately to avoid inflated seat counts.",
+          "Each full-product journey runs on its own baseline copy and includes exact SQL results."
+        ],
+        "buyer_licence_summary": "Non-exclusive commercial and non-commercial demo/test use and modifications; project and client sharing permitted; no standalone resale or public redistribution of the complete package. No exclusive rights or policy-compliance promise. Non-excludable statutory rights are preserved. Complete terms are included as LICENSE.txt.",
+        "full_product": {
+          "table_rows": {
+            "customers": 12,
+            "events": 6,
+            "bookings": 18,
+            "payments": 22
+          },
+          "total_rows": 58,
+          "journeys": 3,
+          "archive_filename": "booking-demo-v1.zip",
+          "archive_bytes": 150989,
+          "archive_sha256": "ba3b6104a867be7874124e69a99e4bbdc6033991ee82955c7d57165a74b1c6f7"
+        },
+        "preview": {
+          "total_rows": 8,
+          "subset_notice": "Eight related sample rows only. Other bookings are omitted; event availability in this subset is not full-product availability.",
+          "licence": "CC0-1.0",
+          "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+          "licence_notice": "The eight preview rows and sample journey are dedicated to the public domain under CC0 1.0. This dedication does not apply to the rest of the paid package.",
+          "tables": {
+            "customers": [
+              {
+                "customer_id": "cust_01",
+                "display_name": "Ari Fern",
+                "email": "ari.fern@example.com",
+                "created_at": "2026-08-01T09:00:00Z"
+              },
+              {
+                "customer_id": "cust_04",
+                "display_name": "Dara Moss",
+                "email": "dara.moss@example.com",
+                "created_at": "2026-08-01T09:00:00Z"
+              }
+            ],
+            "events": [
+              {
+                "event_id": "evt_100",
+                "title": "Pocket Planetarium",
+                "starts_at": "2026-09-14T18:00:00Z",
+                "venue": "Lantern Hall",
+                "capacity": 5,
+                "price_cents": 2500,
+                "currency": "USD"
+              }
+            ],
+            "bookings": [
+              {
+                "booking_id": "b1001",
+                "customer_id": "cust_01",
+                "event_id": "evt_100",
+                "seats": 2,
+                "status": "confirmed",
+                "unit_price_cents": 2500,
+                "total_cents": 5000,
+                "created_at": "2026-08-18T10:00:00Z",
+                "cancelled_at": null
+              },
+              {
+                "booking_id": "b1004",
+                "customer_id": "cust_04",
+                "event_id": "evt_100",
+                "seats": 1,
+                "status": "cancelled",
+                "unit_price_cents": 2500,
+                "total_cents": 2500,
+                "created_at": "2026-08-18T10:00:00Z",
+                "cancelled_at": "2026-08-19T12:00:00Z"
+              }
+            ],
+            "payments": [
+              {
+                "payment_id": "p1001",
+                "booking_id": "b1001",
+                "kind": "charge",
+                "status": "succeeded",
+                "amount_cents": 5000,
+                "parent_payment_id": null,
+                "occurred_at": "2026-08-18T10:05:00Z"
+              },
+              {
+                "payment_id": "p1004",
+                "booking_id": "b1004",
+                "kind": "charge",
+                "status": "succeeded",
+                "amount_cents": 2500,
+                "parent_payment_id": null,
+                "occurred_at": "2026-08-18T10:05:00Z"
+              },
+              {
+                "payment_id": "p1005",
+                "booking_id": "b1004",
+                "kind": "refund",
+                "status": "succeeded",
+                "amount_cents": 2500,
+                "parent_payment_id": "p1004",
+                "occurred_at": "2026-08-19T12:10:04Z"
+              }
+            ]
+          }
+        },
+        "sample_journey": {
+          "title": "A cancelled booking has a charge and matching refund",
+          "sql": "SELECT b.booking_id, b.status, SUM(CASE WHEN p.status != 'succeeded' THEN 0 WHEN p.kind = 'charge' THEN p.amount_cents ELSE -p.amount_cents END) AS net_cents FROM bookings b JOIN payments p ON p.booking_id = b.booking_id WHERE b.booking_id = 'b1004' GROUP BY b.booking_id, b.status;",
+          "expected": [
+            {
+              "booking_id": "b1004",
+              "status": "cancelled",
+              "net_cents": 0
+            }
+          ]
+        },
+        "buyer_licence_text": "Booking Demo v1 — Buyer Licence\nCopyright 2026 sabre-coder contributors.\n\nOn purchase, the buyer receives a non-exclusive, worldwide, perpetual licence\nto use, copy and modify this package, including its fictional data, source,\nexamples and documentation, for commercial or non-commercial demonstrations,\nprototypes, training exercises, automated tests and internal development.\nThe buyer may include original or modified data and assets in applications,\nclient demonstrations, screenshots and test fixtures, and may share the\npackage with collaborators and clients working on those projects.\n\nDo not resell or publicly redistribute the original or modified package as a\nstandalone dataset, template or competing download. This restriction does not\nprevent distributing applications, demonstrations or test suites that use it.\nThe buyer does not receive exclusive rights. Attribution is appreciated but\nnot required. Keep this licence with copies of the complete package shared\nwith collaborators or clients.\n\nAll identities, bookings and payments are fictional. The package is supplied\nas-is, without warranty. It is a demo and test resource, not a production\nbooking system or payment integration. The seller makes no promise that use\nof this package satisfies any particular legal, regulatory or platform policy.\n\nNothing in this licence excludes any rights or remedies that cannot lawfully\nbe excluded.\n\nThe eight rows and sample journey separately identified in the free public\npreview are dedicated to the public domain under CC0 1.0. Their free licence\nis preserved; this buyer licence applies to the remaining package.\n"
+      }
+    }
+  ]
+}

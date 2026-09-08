@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+*.sqlite3
+*.sqlite3-*
+*.zip
+/private/
+/private-products/
+/agent-content-store.service
+/DEPLOYMENT.md
