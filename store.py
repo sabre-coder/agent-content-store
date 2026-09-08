@@ -247,6 +247,7 @@ class StoreApplication:
                          "checkout_url": self.url(base + "/checkout"),
                          "download_url": self.url(base + "/download")})
         return {"schema_version": "1.0", "catalog_url": self.url("/api/v1/catalog"),
+                "documentation_url": "https://github.com/sabre-coder/agent-content-store#api-flow",
                 "checkout": {"available": any(row["checkout_available"] for row in rows),
                              "confirmation_policy": "finalized_on_two_rpc_providers"}, "products": rows}
 
@@ -331,6 +332,7 @@ class StoreApplication:
 People and software use the same endpoints.</p>''' + ''.join(cards) +
                 '<p class="status">' + escape(notice) + '</p><h2>For API clients</h2><p><a href="' +
                 catalog_url + '"><code>GET ' + catalog_url + '</code></a> lists products, prices, and endpoint URLs.</p>'
+                '<p><a href="https://github.com/sabre-coder/agent-content-store#api-flow">Read the complete purchase API instructions</a>.</p>'
                 '<p>POST an empty JSON object to a product’s checkout URL. Save the returned bearer token and transaction request. '
                 'Use that token in the Authorization header when checking the order, confirming payment, and downloading. '
                 'The store never requests wallet keys or signs transactions.</p></main></html>').encode("utf-8")

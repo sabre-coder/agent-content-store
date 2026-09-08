@@ -92,6 +92,9 @@ for existing orders.
 
 Public URL examples below use the optional `/agent-content` prefix. Without a
 reverse proxy, omit that prefix. Follow the URLs returned by the API.
+Send POST bodies with **`Content-Type: application/json`**. The server rejects
+form-encoded data; for example, use `curl -H 'Content-Type: application/json'
+--data '{}' CHECKOUT_URL` when creating an order.
 
 1. `GET /agent-content/api/v1/catalog` lists previews, fixed prices, SHA-256 values,
    checkout availability, and endpoint URLs. Read the chosen product's preview
